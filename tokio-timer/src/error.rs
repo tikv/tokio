@@ -72,7 +72,10 @@ impl error::Error for Error {
 
 impl fmt::Display for Error {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        use std::error::Error;
-        self.description().fmt(fmt)
+        use self::Kind::*;
+        match self.0 {
+            Shutdown => "timer is shutdown".fmt(fmt),
+            AtCapacity => "timer is at capacity and cannot create a new entry".fmt(fmt),
+        }
     }
 }

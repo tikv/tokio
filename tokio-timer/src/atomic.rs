@@ -35,8 +35,21 @@ mod imp {
         }
 
         pub fn compare_and_swap(&self, old: u64, new: u64, ordering: Ordering) -> u64 {
-            self.inner
-                .compare_and_swap(old as usize, new as usize, ordering) as u64
+            // do this migration follow
+            // https://doc.rust-lang.org/std/sync/atomic/struct.AtomicU64.html#migrating-to-compare_exchange-and-compare_exchange_weak
+            let (success, failure) = match ordering {
+                Ordering::Relaxed => (Ordering::Relaxed, Ordering::Relaxed),
+                Ordering::Acquire => (Ordering::Acquire, Ordering::Acquire),
+                Ordering::Release => (Ordering::Release, Ordering::Relaxed),
+                Ordering::AcqRel => (Ordering::AcqRel, Ordering::Acquire),
+                Ordering::SeqCst => (Ordering::SeqCst, Ordering::SeqCst),
+                _ => unimplemented!(),
+            };
+            match self.inner
+                .compare_exchange(old as usize, new as usize, success, failure) {
+                Ok(old) => old as u64,
+                Err(new) => new as u64,
+            }
         }
     }
 }
