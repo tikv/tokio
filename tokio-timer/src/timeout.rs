@@ -9,7 +9,6 @@ use Delay;
 
 use futures::{Async, Future, Poll, Stream};
 
-use std::error;
 use std::fmt;
 use std::time::{Duration, Instant};
 
@@ -282,18 +281,6 @@ impl<T> Error<T> {
         match self.0 {
             Kind::Timer(err) => Some(err),
             _ => None,
-        }
-    }
-}
-
-impl<T: error::Error> error::Error for Error<T> {
-    fn description(&self) -> &str {
-        use self::Kind::*;
-
-        match self.0 {
-            Inner(ref e) => e.description(),
-            Elapsed => "deadline has elapsed",
-            Timer(ref e) => e.description(),
         }
     }
 }
