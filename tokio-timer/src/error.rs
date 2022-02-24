@@ -74,8 +74,8 @@ impl fmt::Display for Error {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         use self::Kind::*;
         match self.0 {
-            Shutdown => "timer is shutdown".fmt(fmt),
-            AtCapacity => "timer is at capacity and cannot create a new entry".fmt(fmt),
+            Shutdown => write!(fmt, "timer is shutdown"),
+            AtCapacity => write!(fmt, "timer is at capacity and cannot create a new entry"),
         }
     }
 }
