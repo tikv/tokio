@@ -21,8 +21,8 @@ Timer facilities for Tokio
 
 [dependencies]
 futures = "0.1.19"
-tokio-executor = "0.1.1"
-crossbeam-utils = "0.7.0"
+tokio-executor = { path = "../tokio-executor" }
+crossbeam-utils = "0.8.8"
 
 # Backs `DelayQueue`
 slab = "0.4.1"
